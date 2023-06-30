@@ -13,7 +13,7 @@ function getTimePassed(time: string): string {
   if (timeAgo < 24) {
     return `${timeAgo} часов назад`;
   }
-  console.log(timeAgo);
+
   timeAgo = now.diff(time, "day");
   return timeAgo + " дней назад";
 }
@@ -22,11 +22,14 @@ function DateTime(props: { date: string }) {
   return <p className="date">{props.date}</p>;
 }
 
-function DateTimePretty(Component: any, timeFormatter: CallableFunction) {
-  return class extends React.Component {
+function DateTimePretty<T extends { date: string }>(
+  Component: React.ComponentType<T>,
+  timeFormatter: CallableFunction
+) {
+  return class extends React.Component<Record<"date", string>> {
     render() {
       const timeString = timeFormatter(this.props.date);
-      return <Component {...this.props} date={timeString} />;
+      return <Component {...(this.props as T)} date={timeString} />;
     }
   };
 }
